@@ -1,0 +1,23 @@
+#s1{
+    width:15vw;
+    height:60%;
+    margin-top: 8px;
+    border-radius:0%;
+}
+#sb1{
+    width:2.5vw;
+    height:60%;
+    margin-top: 8px;
+    background-color: bisque;
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVy7cCP9h8Yw_n0zRnSNRKqW6QyXLnitGMYA&s");
+    background-size: cover;
+    border-radius: 0%;
+    border-color: blue;
+}
+#sb1:hover{
+    opacity:0.5;
+}
+.se1{
+    display:flex;
+    flex-direction: row ;
+}

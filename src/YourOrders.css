@@ -1,0 +1,32 @@
+.your-orders-container {
+    padding: 20px;
+}
+
+.order-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.order-item img.order-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.order-item h3 {
+    margin: 0;
+}
+
+.order-item p {
+    margin: 5px 0;
+}
+
+.date, .time {
+    font-size: 0.9em;
+    color: #555;
+}

@@ -1,0 +1,205 @@
+/* Account.css */
+/* Sign In Styles */
+.sign-in {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 12px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(38, 143, 255, 0.2);
+    outline: none;
+}
+
+button {
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+}
+
+.social-sign-in {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.social-sign-in button {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+.google {
+    background-color: #db4437;
+    border: 1px solid #c1351d;
+}
+
+.facebook {
+    background-color: #4267B2;
+    border: 1px solid #365899;
+}
+
+.phone {
+    background-color: #34a853;
+    border: 1px solid #2c8b3b;
+}
+
+.sign-in-btn {
+    background-color: #28a745;
+    color: white;
+    border: 1px solid #218838;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.sign-in-btn:hover {
+    background-color: #218838;
+}
+
+/* Sign Up Styles (unchanged) */
+.sign-up {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sign-up-btn {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #0056b3;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.sign-up-btn:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .sign-in, .sign-up {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .social-sign-in {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .social-sign-in button {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .sign-in-btn, .sign-up-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+.account-container {
+    background-color: white;
+    width: 100vw;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.account-header h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.account-info {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.account-info p {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.logout-section {
+    margin-top: 20px;
+}
+
+.logout-btn {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #e60000;
+}
