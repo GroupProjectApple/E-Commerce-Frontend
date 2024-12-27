@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: your-app-name
+    name: SwiftMart
     env: static
     staticPublishPath: /build
     buildCommand: npm install && npm run build
