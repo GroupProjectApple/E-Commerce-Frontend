@@ -19,7 +19,7 @@ export function Mqueue(){
   const {Uid,Recommend, setRecommend, setLat, setLng} = useContext(Bvalue);
   useEffect(()=>{
     //alert("Sending event to queue...");
-    const queue_=()=>{axios.post("http://localhost:4000/api/send-event", {
+    const queue_=()=>{axios.post("https://message-queue-backend.onrender.com/api/send-event", {
       userId: Uid, // Replace with dynamic value if necessary
   })
   .then((response) => {
