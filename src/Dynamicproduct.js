@@ -117,7 +117,8 @@ const ProductLevel1 = () => {
     const addToCart = () => {
         console.log(Uid);
         if (!Uid) {
-            setError("Please log in to add items to your cart.");
+            window.location.href='/SignIn';
+            //setError("Please log in to add items to your cart.");
             return;
         }
 
@@ -203,7 +204,8 @@ const BuyNowButton = (props) => {
     const buyNow = () => {
         console.log(Uid);
         if (!Uid) {
-            setError("Please log in to purchase this product.");
+            window.location.href='/SignIn';
+            //setError("Please log in to purchase this product.");
             return;
         }
         if(props.stock < quantity){
