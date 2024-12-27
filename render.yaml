@@ -1,10 +1,9 @@
 services:
-  - type: web
-    name: SwiftMart
-    env: static
-    staticPublishPath: /build
+  - type: static_site
+    name: swiftmart-nhcx  # Your service name here
+    env: node
     buildCommand: npm install && npm run build
+    publishDirectory: build
     routes:
-      - type: rewrite
-        source: /*
+      - path: /*
         destination: /index.html
