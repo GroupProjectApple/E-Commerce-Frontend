@@ -129,35 +129,35 @@ function Searchbutton(props){
    return(<button type="button" id="sb1" onClick={(e) => {props.path!==`/`?navg(props.path):window.location.href = '/'; updatadata();updateme();}}></button>);
 }
 
+const ForwardedSearchbutton = React.forwardRef(Searchbutton);
+
 export function Searchbar() {
-  const [Text, setText] = useState('');
+  const [Text, setText] = useState("");
   const [Txt, setTxt] = useState([]);
   const contextValue = useContext(Bvalue);
-  const { Catg, setCatg, Uid, setUid } = contextValue;
+  const { Catg, Uid } = contextValue;
   const [Isclicked, setIsclicked] = useState(false);
   const dropdownRef = useRef(null); // Ref to track the dropdown element
   const searchButtonRef = useRef(null); // Ref for the Searchbutton
 
-  // Function to close dropdown if clicked outside
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsclicked(false); // Close the dropdown
     }
   };
 
-  // Handle Enter key press
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       console.log("Enter key pressed!");
-      searchButtonRef.current.click(); // Trigger Searchbutton click
+      searchButtonRef.current?.click(); // Trigger Searchbutton click
     }
   };
 
   useEffect(() => {
     if (Isclicked) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     const fetchData = async (UId = null) => {
@@ -192,20 +192,21 @@ export function Searchbar() {
           phrases
             .filter((phrase) => phrase !== null)
             .map((phrase) => ({
-              ph: phrase, // Original phrase (e.g., "premium electronics")
+              ph: phrase,
               path: `/search?query=${phrase.replace(/ /g, "+")}&i=${Catg}`,
             }))
         );
       } catch (error) {
         setTxt([
           {
-            ph: Text, // Original phrase (e.g., "premium electronics")
+            ph: Text,
             path: `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}`,
           },
         ]);
       }
     };
-    if (Text !== '' && Text.length > 0) {
+
+    if (Text !== "" && Text.length > 0) {
       fetchData();
     } else if (Uid && Isclicked) {
       fetchData(Uid);
@@ -213,9 +214,8 @@ export function Searchbar() {
       setTxt([]);
     }
 
-    // Cleanup the event listener on component unmount
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [Catg, Text, Uid, Isclicked]);
 
@@ -234,7 +234,7 @@ export function Searchbar() {
         />
         <G.DropdownSearchMenu Txt={Txt} ref={dropdownRef} />
       </div>
-      <Searchbutton
+      <ForwardedSearchbutton
         ref={searchButtonRef} // Attach ref to the Searchbutton
         path={Text ? `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}` : `/`}
         Text={Text}
@@ -242,7 +242,6 @@ export function Searchbar() {
     </div>
   );
 }
-
 
 export function Product3() {
    // State to hold the fetched products
