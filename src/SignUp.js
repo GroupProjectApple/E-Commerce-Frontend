@@ -9,6 +9,7 @@ export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isValid, setIsValid] = useState(true);
+    const [usernameError, setUsernameError] = useState('');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const handleSignUp = async () => {
@@ -16,14 +17,23 @@ export default function SignUp() {
         else if(!isValid) alert("invalid email entered");
         else{
         try {
-            const response = await axios.post('https://e-commerce-website-tioj.onrender.com/api/user', {
+            const usernameCheck = await axios.get(`https://e-commerce-website-tioj.onrender.com/api/user?username=${username}`);
+                if (usernameCheck.data && usernameCheck.data.length > 0) {
+                    setUsernameError('Username already taken. Please choose a different one.');
+                    return;
+                }
+        } catch (error) {
+            try{
+                const response = await axios.post('https://e-commerce-website-tioj.onrender.com/api/user', {
                 username,
                 email,
                 password
-            });
-            alert('User created successfully');
-        } catch (error) {
-            alert(`Error: ${error.response.data.message}`);
+                });
+                alert('User created successfully');
+            }
+            catch(error){
+                alert(`Error: ${error.response.data.message}`);
+            }
         }
     }
     };
@@ -38,8 +48,10 @@ export default function SignUp() {
                 onChange={(e) => {
                     setUsername(e.target.value)
                     setfuser(e.target.value.length !== 0)
+                    setUsernameError(''); 
                 }} 
             />
+            {usernameError && <p className="error-message">{usernameError}</p>}
             <input 
                 type="email" 
                 placeholder="Email" 

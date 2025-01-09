@@ -203,3 +203,8 @@ button:hover {
 .logout-btn:hover {
     background-color: #e60000;
 }
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 1px;
+}
