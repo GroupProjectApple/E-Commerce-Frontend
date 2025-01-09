@@ -59,77 +59,110 @@ function Categories(){
    return(<G.Dropdownmenu op1="All Categories" options={Pl3}/>)
 }
 
-function Searchbutton(props){
-   const navg= useNavigate();
-   const {Uid} = useContext(Bvalue);
-   const updatadata= async() =>{
-      if(!props.Text || props.Text.length ===0){return;}
-      try{
-         const response=await axios.get("https://e-commerce-website-tioj.onrender.com/api/search_phrases",{
-            params:{Uid:"-1", phrases:{"$regex":`^${props.Text}$`, "$options": "i"}}
-         });
-         console.log(response.data);
-      }
-      catch(error){
-         try{
-            await axios.put("https://e-commerce-website-tioj.onrender.com/api/update",{
-               collectionName :"search_phrases", 
-               searchFields: {Uid:"-1"},
-               updatedValues:{$push:{phrases: {
-                  $each: [props.Text],
-                  $position:0,
-                  $slice: 5000             
-                }}}
-            });
-            //alert("Success");
-         }
-         catch(error){
-            console.log(error);
-         }
-      }
+export const Searchbutton = React.forwardRef((props, ref) => {
+  const navg = useNavigate();
+  const { Uid } = useContext(Bvalue);
 
-   };
-   const updateme= async() =>{
-      if (!Uid || !props.Text || props.Text.length<=0){
-         return;
-      }
-      try{
-         const response=await axios.get("https://e-commerce-website-tioj.onrender.com/api/search_phrases",{
-            params:{Uid: Uid, phrases:{"$regex":`^${props.Text}$`, "$options": "i"}}
-         });
-         console.log(response.data);
-      }
-      catch(error){
-         try{
-            await axios.put("https://e-commerce-website-tioj.onrender.com/api/update",{
-               collectionName :"search_phrases", 
-               searchFields: {Uid: Uid},
-               updatedValues:{$push:{phrases: {
-                  $each: [props.Text],
-                  $position : 0,
-                  $slice: 5           
-                }}}
-            });
-            //alert("Success");
-         }
-         catch(error){
-            try{
-               await axios.post("https://e-commerce-website-tioj.onrender.com/api/search_phrases",{
-                  Uid: Uid,
-                  phrases:[props.Text]
-               });
-            }
-            catch(error){
-               console.log(error);
-            }
-         }
-      }
+  const handleClick = async () => {
+    console.log("Searchbutton clicked, props:", props);
 
-   };
-   return(<button type="button" id="sb1" onClick={(e) => {props.path!==`/`?navg(props.path):window.location.href = '/'; updatadata();updateme();}}></button>);
-}
+    if (props.path) {
+      navg(props.path); // Navigate if a valid path is present
+    } else {
+      window.location.href = "/";
+    }
 
-const ForwardedSearchbutton = React.forwardRef(Searchbutton);
+    // Execute updates
+    await updatadata();
+    await updateme();
+  };
+
+  const updatadata = async () => {
+    if (!props.Text || props.Text.length === 0) {
+      console.log("No text to update data.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        "https://e-commerce-website-tioj.onrender.com/api/search_phrases",
+        {
+          params: {
+            Uid: "-1",
+            phrases: { $regex: `^${props.Text}$`, $options: "i" },
+          },
+        }
+      );
+      console.log("Update data response:", response.data);
+    } catch (error) {
+      try {
+        await axios.put("https://e-commerce-website-tioj.onrender.com/api/update", {
+          collectionName: "search_phrases",
+          searchFields: { Uid: "-1" },
+          updatedValues: {
+            $push: {
+              phrases: {
+                $each: [props.Text],
+                $position: 0,
+                $slice: 5000,
+              },
+            },
+          },
+        });
+        console.log("Data updated successfully.");
+      } catch (error) {
+        console.error("Error updating data:", error);
+      }
+    }
+  };
+
+  const updateme = async () => {
+    if (!Uid || !props.Text || props.Text.length <= 0) {
+      console.log("No Uid or text to update.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        "https://e-commerce-website-tioj.onrender.com/api/search_phrases",
+        {
+          params: {
+            Uid,
+            phrases: { $regex: `^${props.Text}$`, $options: "i" },
+          },
+        }
+      );
+      console.log("Update me response:", response.data);
+    } catch (error) {
+      try {
+        await axios.put("https://e-commerce-website-tioj.onrender.com/api/update", {
+          collectionName: "search_phrases",
+          searchFields: { Uid },
+          updatedValues: {
+            $push: {
+              phrases: {
+                $each: [props.Text],
+                $position: 0,
+                $slice: 5,
+              },
+            },
+          },
+        });
+        console.log("Updated me successfully.");
+      } catch (error) {
+        console.error("Error updating me:", error);
+      }
+    }
+  };
+
+  // Forward the `handleClick` function to the parent via ref
+  React.useImperativeHandle(ref, () => ({
+    triggerSearch: handleClick,
+  }));
+
+  return (
+    <button type="button" id="sb1" onClick={handleClick}>
+    </button>
+  );
+});
 
 export function Searchbar() {
   const [Text, setText] = useState("");
@@ -137,19 +170,19 @@ export function Searchbar() {
   const contextValue = useContext(Bvalue);
   const { Catg, Uid } = contextValue;
   const [Isclicked, setIsclicked] = useState(false);
-  const dropdownRef = useRef(null); // Ref to track the dropdown element
-  const searchButtonRef = useRef(null); // Ref for the Searchbutton
+  const dropdownRef = useRef(null);
+  const searchButtonRef = useRef(null);
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsclicked(false); // Close the dropdown
+      setIsclicked(false);
     }
   };
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       console.log("Enter key pressed!");
-      searchButtonRef.current?.click(); // Trigger Searchbutton click
+      searchButtonRef.current?.triggerSearch(); // Call the forwarded function
     }
   };
 
@@ -230,18 +263,20 @@ export function Searchbar() {
           value={Text}
           onChange={(e) => setText(e.target.value)}
           onClick={() => setIsclicked(!Isclicked)}
-          onKeyDown={handleKeyPress} // Trigger on Enter key press
+          onKeyDown={handleKeyPress}
         />
         <G.DropdownSearchMenu Txt={Txt} ref={dropdownRef} />
       </div>
-      <ForwardedSearchbutton
-        ref={searchButtonRef} // Attach ref to the Searchbutton
+      <Searchbutton
+        ref={searchButtonRef}
         path={Text ? `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}` : `/`}
         Text={Text}
       />
     </div>
   );
 }
+
+ 
 
 export function Product3() {
    // State to hold the fetched products
