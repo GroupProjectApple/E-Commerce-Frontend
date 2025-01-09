@@ -23,13 +23,13 @@ const Footer = () => {
           <h4>Quick Links</h4>
           <ul className="footer-links">
             <li>
-              <a href="/about">About</a>
+              <a href='/About'>About</a>
             </li>
             <li>
-              <a href="/categories">Categories</a>
+              <a href='/categories'>Categories</a>
             </li>
             <li>
-              <a href="/contact">Contact</a>
+              <a href='/contact'>Contact</a>
             </li>
           </ul>
         </div>
