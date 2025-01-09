@@ -129,90 +129,120 @@ function Searchbutton(props){
    return(<button type="button" id="sb1" onClick={(e) => {props.path!==`/`?navg(props.path):window.location.href = '/'; updatadata();updateme();}}></button>);
 }
 
-export function Searchbar(){
-   const [Text, setText] = useState('');
-   const [Txt, setTxt]= useState([]);
-   const contextValue= useContext(Bvalue);
-   const {Catg, setCatg, Uid, setUid}=contextValue;
-   const [Isclicked, setIsclicked] = useState(false);
-   const dropdownRef = useRef(null); // Ref to track the dropdown element
-   // Function to close dropdown if clicked outside
+export function Searchbar() {
+  const [Text, setText] = useState('');
+  const [Txt, setTxt] = useState([]);
+  const contextValue = useContext(Bvalue);
+  const { Catg, setCatg, Uid, setUid } = contextValue;
+  const [Isclicked, setIsclicked] = useState(false);
+  const dropdownRef = useRef(null); // Ref to track the dropdown element
+  const searchButtonRef = useRef(null); // Ref for the Searchbutton
+
+  // Function to close dropdown if clicked outside
   const handleClickOutside = (event) => {
-   if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-     setIsclicked(false); // Close the dropdown
-   }
- };
-   useEffect(() => {
-      if (Isclicked) {
-         document.addEventListener('mousedown', handleClickOutside);
-      }else {
-         document.removeEventListener('mousedown', handleClickOutside);
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsclicked(false); // Close the dropdown
+    }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      console.log("Enter key pressed!");
+      searchButtonRef.current.click(); // Trigger Searchbutton click
+    }
+  };
+
+  useEffect(() => {
+    if (Isclicked) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    const fetchData = async (UId = null) => {
+      try {
+        const regex = `^${G.GenerateSearchRegex(Text)}.*$`;
+        const pipeline = JSON.stringify([
+          {
+            $match: { phrases: { $regex: regex, $options: "i" } },
+          },
+          {
+            $project: {
+              phrases: {
+                $filter: {
+                  input: "$phrases",
+                  as: "phrase",
+                  cond: { $regexMatch: { input: "$$phrase", regex: regex, options: "i" } },
+                },
+              },
+            },
+          },
+        ]);
+        const url = `https://e-commerce-website-tioj.onrender.com/api/search_phrases?aggregate=true&pipeline=${encodeURIComponent(
+          pipeline
+        )}`;
+        const response = !UId
+          ? await axios.get(url)
+          : await axios.get(`https://e-commerce-website-tioj.onrender.com/api/search_phrases`, { params: { Uid: UId } });
+        console.log(response.data);
+        const phrases =
+          response.data.length > 0 ? response.data[0].phrases.slice(0, 5) : [];
+        setTxt(
+          phrases
+            .filter((phrase) => phrase !== null)
+            .map((phrase) => ({
+              ph: phrase, // Original phrase (e.g., "premium electronics")
+              path: `/search?query=${phrase.replace(/ /g, "+")}&i=${Catg}`,
+            }))
+        );
+      } catch (error) {
+        setTxt([
+          {
+            ph: Text, // Original phrase (e.g., "premium electronics")
+            path: `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}`,
+          },
+        ]);
       }
-      const fetchData = async (UId=null) =>{
-         try{
-            const regex = `^${G.GenerateSearchRegex(Text)}.*$`;
-            const pipeline = JSON.stringify([
-               {
-                 $match: { phrases : { $regex: regex, $options: "i" } }
-               },
-               {
-                 $project: {
-                   phrases: {
-                     $filter: {
-                       input: "$phrases",
-                       as: "phrase",
-                       cond: { $regexMatch: { input: "$$phrase", regex: regex, options: "i" } }
-                     }
-                   }
-                 }
-               }
-             ]);
-            const url = `https://e-commerce-website-tioj.onrender.com/api/search_phrases?aggregate=true&pipeline=${encodeURIComponent(pipeline)}`;
-            const response = (!UId)?await axios.get(url):await axios.get(`https://e-commerce-website-tioj.onrender.com/api/search_phrases`,{params:{Uid:UId}});
-            console.log(response.data);
-            const phrases = response.data.length > 0 ? response.data[0].phrases.slice(0,5) : [];
-            setTxt(
-              phrases.filter((phrase)=>{return phrase!==null}).map((phrase) => ({
-                ph: phrase, // Original phrase (e.g., "premium electronics")
-                path: `/search?query=${phrase.replace(/ /g, "+")}&i=${Catg}`
-              }))
-            );
-         }
-         catch (error){
-            setTxt([
-               {
-               ph: Text, // Original phrase (e.g., "premium electronics")
-               path: `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}`
-               }
-         ])
-         }
-      };
-      if(Text!=='' && Text.length>0){
-         fetchData();
-      }
-      else if(Uid && Isclicked){
-         fetchData(Uid);
-      }
-      else{
-         setTxt([]);
-      }
-      // Cleanup the event listener on component unmount
+    };
+    if (Text !== '' && Text.length > 0) {
+      fetchData();
+    } else if (Uid && Isclicked) {
+      fetchData(Uid);
+    } else {
+      setTxt([]);
+    }
+
+    // Cleanup the event listener on component unmount
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+  }, [Catg, Text, Uid, Isclicked]);
 
-   },[Catg, Text, Uid, Isclicked])
-   return (
-      <div className="se1">
-         <Categories />
-         <div>
-            <input type="text" placeholder="Search" id="s1" value={Text} onChange={(e) => setText(e.target.value)} onClick={() => setIsclicked(!Isclicked)}></input>
-            <G.DropdownSearchMenu Txt={Txt} ref={dropdownRef}/>
-         </div>
-         <Searchbutton path={(Text)?`/search?query=${Text.replace(/ /g, "+")}&i=${Catg}`:`/`} Text={Text} />
+  return (
+    <div className="se1">
+      <Categories />
+      <div>
+        <input
+          type="text"
+          placeholder="Search"
+          id="s1"
+          value={Text}
+          onChange={(e) => setText(e.target.value)}
+          onClick={() => setIsclicked(!Isclicked)}
+          onKeyDown={handleKeyPress} // Trigger on Enter key press
+        />
+        <G.DropdownSearchMenu Txt={Txt} ref={dropdownRef} />
       </div>
-   );
+      <Searchbutton
+        ref={searchButtonRef} // Attach ref to the Searchbutton
+        path={Text ? `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}` : `/`}
+        Text={Text}
+      />
+    </div>
+  );
 }
+
 
 export function Product3() {
    // State to hold the fetched products
