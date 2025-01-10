@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Bvalue } from './SignIn'; // Assume we have user context
 import "./Cart.css";
 import { SignInSignUp } from './Generic forms';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 const CartItem = ({ item, updateQuantity, removeItem }) => {
     return (
@@ -47,7 +48,7 @@ const ECart = () => {
         if (!Uid) {
           return;}
         setLoading(true); // Start loading
-        axios.get(`https://e-commerce-website-tioj.onrender.com/api/cart`, {
+        axios.get(`${BASE_URL}/api/cart`, {
             params: { UserId: Uid }
         })
         .then(response => {
@@ -61,7 +62,7 @@ const ECart = () => {
     }, [Uid]); // Add Uid to the dependency array
 
     const updateQuantity = (productId, quantity) => {
-        axios.put(`https://e-commerce-website-tioj.onrender.com/api/update`, {
+        axios.put(`${BASE_URL}/api/update`, {
             collectionName: "carts",
             searchFields: { UserId: Uid, "items.productId": productId },
             updatedValues: { $set: { "items.$.quantity": quantity } }
@@ -73,7 +74,7 @@ const ECart = () => {
     const removeItem = async(productId) => {
         if (cart.length > 1) {
             try{
-                axios.put(`https://e-commerce-website-tioj.onrender.com/api/update`, {
+                axios.put(`${BASE_URL}/api/update`, {
                     collectionName: "carts",
                     searchFields: { UserId: Uid, "items.productId": productId },
                     updatedValues: { $pull: { items: { productId: productId } } }
@@ -88,7 +89,7 @@ const ECart = () => {
     };
 
     const removeUser = () => {
-        axios.delete(`https://e-commerce-website-tioj.onrender.com/api/carts`, {
+        axios.delete(`${BASE_URL}/api/carts`, {
             data: { query: { UserId: Uid } }
         })
         .then(response => {console.log("Deleted Successfully");window.location.href='/Cart'})
@@ -105,7 +106,7 @@ const ECart = () => {
             purchasedAt: new Date().toISOString()
         }));
 
-        axios.put(`https://e-commerce-website-tioj.onrender.com/api/update`, 
+        axios.put(`${BASE_URL}/api/update`, 
             {
                 collectionName: "orders",
                 searchFields: { UserId: Uid },
@@ -123,7 +124,7 @@ const ECart = () => {
             })
             .catch((error) => {
                 // If the user doesn't already have an orders entry, create one
-                axios.post(`https://e-commerce-website-tioj.onrender.com/api/orders`, {
+                axios.post(`${BASE_URL}/api/orders`, {
                     UserId: Uid,
                     items: orderItems
                 })

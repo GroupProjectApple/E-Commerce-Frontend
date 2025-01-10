@@ -14,12 +14,13 @@ import YourOrders from './YourOrders';
 import Account from './Account';
 import Map from './location';
 import AboutUs from './AboutUs';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 export function Mqueue(){
   const {Uid,Recommend, setRecommend, setLat, setLng} = useContext(Bvalue);
   useEffect(()=>{
     //alert("Sending event to queue...");
-    const queue_=()=>{axios.post("https://message-queue-backend.onrender.com/api/send-event", {
+    const queue_=()=>{axios.post(`${MESSAGE_QUEUE_URL}/api/send-event`, {
       userId: Uid, // Replace with dynamic value if necessary
   })
   .then((response) => {
@@ -30,7 +31,7 @@ export function Mqueue(){
   });};
   const getrec=async()=>{
     try {
-      const response = await axios.get("https://e-commerce-website-tioj.onrender.com/api/users", {
+      const response = await axios.get(`${BASE_URL}/api/users`, {
           params: { _id:Uid},
       });
       

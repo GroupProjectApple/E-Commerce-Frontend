@@ -1,6 +1,7 @@
 import './Account.css';
 import { useState } from 'react';
 import axios from 'axios';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 export default function SignUp() {
     const [fuser,setfuser] = useState(false);
@@ -17,14 +18,14 @@ export default function SignUp() {
         else if(!isValid) alert("invalid email entered");
         else{
         try {
-            const usernameCheck = await axios.get(`https://e-commerce-website-tioj.onrender.com/api/user?username=${username}`);
+            const usernameCheck = await axios.get(`${BASE_URL}/api/user?username=${username}`);
                 if (usernameCheck.data && usernameCheck.data.length > 0) {
                     setUsernameError('Username already taken. Please choose a different one.');
                     return;
                 }
         } catch (error) {
             try{
-                const response = await axios.post('https://e-commerce-website-tioj.onrender.com/api/user', {
+                const response = await axios.post(`${BASE_URL}/api/user`, {
                 username,
                 email,
                 password

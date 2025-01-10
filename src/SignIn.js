@@ -2,6 +2,7 @@ import './Account.css';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 // Create the context
 export const Bvalue = createContext();
@@ -54,7 +55,7 @@ export function SignIn() {
 
     const handleClick = async () => {
         try {
-            const response = await axios.get("https://e-commerce-website-tioj.onrender.com/api/users", {
+            const response = await axios.get(`${BASE_URL}/api/users`, {
                 params: { username: username, email: email, password: password },
             });
             

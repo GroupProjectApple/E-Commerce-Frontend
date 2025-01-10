@@ -4,6 +4,7 @@ import { Bvalue } from './SignIn'; // Assume user context
 import { format } from 'date-fns';
 import './YourOrders.css'; // Import the CSS file
 import { SignInSignUp } from './Generic forms';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 const YourOrders = () => {
     const { Uid } = useContext(Bvalue); // UserId from context
@@ -14,7 +15,7 @@ const YourOrders = () => {
     useEffect(() => {
         if (!Uid) return;
         setLoading(true);
-        axios.get(`https://e-commerce-website-tioj.onrender.com/api/orders`, {
+        axios.get(`${BASE_URL}/api/orders`, {
             params: { UserId: Uid },
         })
             .then(response => {

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './products.css';
 import { Bvalue } from './SignIn';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 function SCElement(props) {
     return (
@@ -23,7 +24,7 @@ const SubCategory = () => {
     useEffect(() => {
       const fetchSubCategories = async () => {
         try {
-          const response = await axios.get(`https://e-commerce-website-tioj.onrender.com/api/subcategories`, {
+          const response = await axios.get(`${BASE_URL}/api/subcategories`, {
             params: { categoryId }
           });
           setSubCategories(response.data);
@@ -51,7 +52,7 @@ function ProductElement(props) {
 
         if(!Uid){return;}
         try{
-            await axios.put("https://e-commerce-website-tioj.onrender.com/api/update",
+            await axios.put(`${BASE_URL}/api/update`,
              {
                 collectionName :"user_interactions", 
                 searchFields: {Uid: Uid},
@@ -63,7 +64,7 @@ function ProductElement(props) {
             });
         }catch(error){
             try{
-            await axios.post("https://e-commerce-website-tioj.onrender.com/api/user_interactions",{
+            await axios.post(`${BASE_URL}/api/user_interactions`,{
                 Uid: Uid,
                 products:[props.element.product_details]
             });
@@ -90,7 +91,7 @@ const ProductLevel1 = () => {
     useEffect(() => {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(`https://e-commerce-website-tioj.onrender.com/api/product1`, {
+          const response = await axios.get(`${BASE_URL}/api/product1`, {
             params: { subcategoryId }
           });
           setPl1(response.data);
@@ -122,7 +123,7 @@ const ProductLevel1 = () => {
             return;
         }
 
-        axios.put(`https://e-commerce-website-tioj.onrender.com/api/update`, 
+        axios.put(`${BASE_URL}/api/update`, 
         {
             collectionName: "carts", 
             searchFields: { UserId: Uid, "items.productId": props.productId },
@@ -133,7 +134,7 @@ const ProductLevel1 = () => {
                 setError(null); // Clear any previous errors
             })
             .catch(() => {
-                axios.put(`https://e-commerce-website-tioj.onrender.com/api/update`, 
+                axios.put(`${BASE_URL}/api/update`, 
                 {
                     collectionName: "carts",
                     searchFields: { UserId: Uid },
@@ -150,11 +151,11 @@ const ProductLevel1 = () => {
                     },
                 })
                     .then(() => {
-                        console.log('Product added to cart');
+                        alert('Product added to cart');
                         setError(null); // Clear any previous errors
                     })
                     .catch(() => {
-                        axios.post(`https://e-commerce-website-tioj.onrender.com/api/carts`, {
+                        axios.post(`${BASE_URL}/api/carts`, {
                             UserId: Uid,
                             items: [
                                 {
@@ -213,7 +214,7 @@ const BuyNowButton = (props) => {
             return;
         }
         // Add product to orders collection
-        axios.put(`https://e-commerce-website-tioj.onrender.com/api/update`, 
+        axios.put(`${BASE_URL}/api/update`, 
         {
             collectionName: "orders",
             searchFields: { UserId: Uid },
@@ -241,7 +242,7 @@ const BuyNowButton = (props) => {
         })
         .catch((error) => {
             // If the user doesn't already have an orders entry, create one
-            axios.post(`https://e-commerce-website-tioj.onrender.com/api/orders`, {
+            axios.post(`${BASE_URL}/api/orders`, {
                 UserId: Uid,
                 items: [
                     {
@@ -263,7 +264,7 @@ const BuyNowButton = (props) => {
                 setError('Error processing your purchase. Please try again.');
             });
         });
-        axios.put("https://e-commerce-website-tioj.onrender.com/api/update",
+        axios.put(`${BASE_URL}/api/update`,
             {
                 collectionName:"product1",
                 searchFields:{_id:props.productId},
@@ -296,7 +297,7 @@ const ProductLevel0 = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`https://e-commerce-website-tioj.onrender.com/api/product1`, {
+                const response = await axios.get(`${BASE_URL}/api/product1`, {
                     params: { _id },
                 });
                 if (response.data) {

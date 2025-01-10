@@ -5,6 +5,7 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ECart from "./Cart";
 import { Bvalue } from './SignIn';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 export function AccountButton() {
    const contextValue = useContext(Bvalue);  // Log the value from the context
@@ -65,14 +66,14 @@ function Searchbutton(props){
    const updatadata= async() =>{
       if(!props.Text || props.Text.length ===0){return;}
       try{
-         const response=await axios.get("https://e-commerce-website-tioj.onrender.com/api/search_phrases",{
+         const response=await axios.get(`${BASE_URL}/api/search_phrases`,{
             params:{Uid:"-1", phrases:{"$regex":`^${props.Text}$`, "$options": "i"}}
          });
          console.log(response.data);
       }
       catch(error){
          try{
-            await axios.put("https://e-commerce-website-tioj.onrender.com/api/update",{
+            await axios.put(`${BASE_URL}/api/update`,{
                collectionName :"search_phrases", 
                searchFields: {Uid:"-1"},
                updatedValues:{$push:{phrases: {
@@ -94,14 +95,14 @@ function Searchbutton(props){
          return;
       }
       try{
-         const response=await axios.get("https://e-commerce-website-tioj.onrender.com/api/search_phrases",{
+         const response=await axios.get(`${BASE_URL}/api/search_phrases`,{
             params:{Uid: Uid, phrases:{"$regex":`^${props.Text}$`, "$options": "i"}}
          });
          console.log(response.data);
       }
       catch(error){
          try{
-            await axios.put("https://e-commerce-website-tioj.onrender.com/api/update",{
+            await axios.put(`${BASE_URL}/api/update`,{
                collectionName :"search_phrases", 
                searchFields: {Uid: Uid},
                updatedValues:{$push:{phrases: {
@@ -114,7 +115,7 @@ function Searchbutton(props){
          }
          catch(error){
             try{
-               await axios.post("https://e-commerce-website-tioj.onrender.com/api/search_phrases",{
+               await axios.post(`${BASE_URL}/api/search_phrases`,{
                   Uid: Uid,
                   phrases:[props.Text]
                });
@@ -167,8 +168,8 @@ export function Searchbar(){
                  }
                }
              ]);
-            const url = `https://e-commerce-website-tioj.onrender.com/api/search_phrases?aggregate=true&pipeline=${encodeURIComponent(pipeline)}`;
-            const response = (!UId)?await axios.get(url):await axios.get(`https://e-commerce-website-tioj.onrender.com/api/search_phrases`,{params:{Uid:UId}});
+            const url = `${BASE_URL}/api/search_phrases?aggregate=true&pipeline=${encodeURIComponent(pipeline)}`;
+            const response = (!UId)?await axios.get(url):await axios.get(`${BASE_URL}/api/search_phrases`,{params:{Uid:UId}});
             console.log(response.data);
             const phrases = response.data.length > 0 ? response.data[0].phrases.slice(0,5) : [];
             setTxt(
@@ -223,7 +224,7 @@ export function Product3() {
    // useEffect to fetch data when the component mounts
    useEffect(() => {
      console.log('Fetching data...');
-     axios.get('https://e-commerce-website-tioj.onrender.com/api/product')
+     axios.get(`${BASE_URL}/api/product`)
        .then(response => {
          console.log('Data fetched:', response.data);
          // Store the fetched data in the state

@@ -12,10 +12,10 @@ const AboutUs = () => {
         <section className="about-us-description">
           <h2>Our Story</h2>
           <p>
-            Welcome to [Your Company Name], your number one source for all things [products you sell]. We're dedicated to giving you the very best of [product categories], with a focus on quality, customer service, and uniqueness.
+            Welcome to SwiftMart, your number one source for all your shopping requirements. We're dedicated to building trust, with a focus on quality, customer service, and uniqueness.
           </p>
           <p>
-            Founded in [Year], [Your Company Name] has come a long way from its beginnings in [starting location]. When we first started out, our passion for [specific reason for starting the business] drove us to do intense research, so that [Your Company Name] can offer you the world’s most advanced products. We now serve customers all over [region or country], and are thrilled to be a part of the e-commerce industry.
+            Founded in 2024, SwiftMart has come a long way. When we first started out, our passion for quality e-commerce services drove us to do intense research, so that SwiftMart can offer you the world’s most advanced products. We are thrilled to be a part of the e-commerce industry.
           </p>
         </section>
         <section className="about-us-mission">

@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import './Generic forms.css';
 import axios from 'axios';
 import { Bvalue } from './SignIn';
+import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
 
 export function Button(props){
   return (
@@ -30,7 +31,7 @@ function ProductElement(props) {
 
       if(!Uid){return;}
       try{
-          await axios.put("https://e-commerce-website-tioj.onrender.com/api/update",
+          await axios.put(`${BASE_URL}/api/update`,
            {
               collectionName :"user_interactions", 
               searchFields: {Uid: Uid},
@@ -42,7 +43,7 @@ function ProductElement(props) {
           });
       }catch(error){
           try{
-          await axios.post("https://e-commerce-website-tioj.onrender.com/api/user_interactions",{
+          await axios.post(`${BASE_URL}/api/user_interactions`,{
               Uid: Uid,
               products:[props.element.product_details]
           });
@@ -363,7 +364,7 @@ export function SearchResult() {
         ]);
         
 
-        const url = `https://e-commerce-website-tioj.onrender.com/api/product1?aggregate=true&pipeline=${encodeURIComponent(pipeline)}`;
+        const url = `${BASE_URL}/api/product1?aggregate=true&pipeline=${encodeURIComponent(pipeline)}`;
         const response = await axios.get(url);
 
         setProducts(response.data);
