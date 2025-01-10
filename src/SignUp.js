@@ -38,6 +38,7 @@ export default function SignUp() {
            }
         }
     }
+     window.location.href= '/SignIn';
     };
 
     return (
