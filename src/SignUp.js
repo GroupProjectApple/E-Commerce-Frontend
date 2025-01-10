@@ -23,17 +23,19 @@ export default function SignUp() {
                     return;
                 }
         } catch (error) {
-            try{
-                const response = await axios.post('https://e-commerce-website-tioj.onrender.com/api/user', {
+           try {
+            const response = await axios.post('https://e-commerce-website-tioj.onrender.com/api/user', {
                 username,
                 email,
                 password
-                });
-                alert('User created successfully');
-            }
-            catch(error){
-                alert(`Error: ${error.response.data.message}`);
-            }
+            });
+            await axios.post('https://e-commerce-website-tioj.onrender.com/api/search_phrases',{
+                Uid: response.data.data._id,
+                phrases:[username[0]]
+            });
+           }catch (error) {
+              alert(`Error: ${error.response.data.message}`);
+           }
         }
     }
     };
