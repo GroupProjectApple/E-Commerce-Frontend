@@ -5,7 +5,7 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ECart from "./Cart";
 import { Bvalue } from './SignIn';
-import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
+import { BASE_URL,MESSAGE_QUEUE_URL } from "./config";
 
 export function AccountButton() {
    const contextValue = useContext(Bvalue);  // Log the value from the context
@@ -60,160 +60,224 @@ function Categories(){
    return(<G.Dropdownmenu op1="All Categories" options={Pl3}/>)
 }
 
-function Searchbutton(props){
-   const navg= useNavigate();
-   const {Uid} = useContext(Bvalue);
-   const updatadata= async() =>{
-      if(!props.Text || props.Text.length ===0){return;}
-      try{
-         const response=await axios.get(`${BASE_URL}/api/search_phrases`,{
-            params:{Uid:"-1", phrases:{"$regex":`^${props.Text}$`, "$options": "i"}}
-         });
-         console.log(response.data);
-      }
-      catch(error){
-         try{
-            await axios.put(`${BASE_URL}/api/update`,{
-               collectionName :"search_phrases", 
-               searchFields: {Uid:"-1"},
-               updatedValues:{$push:{phrases: {
-                  $each: [props.Text],
-                  $position:0,
-                  $slice: 5000             
-                }}}
-            });
-            //alert("Success");
-         }
-         catch(error){
-            console.log(error);
-         }
-      }
+export const Searchbutton = React.forwardRef((props, ref) => {
+  const navg = useNavigate();
+  const { Uid } = useContext(Bvalue);
 
-   };
-   const updateme= async() =>{
-      if (!Uid || !props.Text || props.Text.length<=0){
-         return;
-      }
-      try{
-         const response=await axios.get(`${BASE_URL}/api/search_phrases`,{
-            params:{Uid: Uid, phrases:{"$regex":`^${props.Text}$`, "$options": "i"}}
-         });
-         console.log(response.data);
-      }
-      catch(error){
-         try{
-            await axios.put(`${BASE_URL}/api/update`,{
-               collectionName :"search_phrases", 
-               searchFields: {Uid: Uid},
-               updatedValues:{$push:{phrases: {
-                  $each: [props.Text],
-                  $position : 0,
-                  $slice: 5           
-                }}}
-            });
-            //alert("Success");
-         }
-         catch(error){
-            try{
-               await axios.post(`${BASE_URL}/api/search_phrases`,{
-                  Uid: Uid,
-                  phrases:[props.Text]
-               });
-            }
-            catch(error){
-               console.log(error);
-            }
-         }
-      }
+  const handleClick = async () => {
+    console.log("Searchbutton clicked, props:", props);
 
-   };
-   return(<button type="button" id="sb1" onClick={(e) => {props.path!==`/`?navg(props.path):window.location.href = '/'; updatadata();updateme();}}></button>);
-}
+    if (props.path) {
+      navg(props.path); // Navigate if a valid path is present
+    } else {
+      window.location.href = "/";
+    }
 
-export function Searchbar(){
-   const [Text, setText] = useState('');
-   const [Txt, setTxt]= useState([]);
-   const contextValue= useContext(Bvalue);
-   const {Catg, setCatg, Uid, setUid}=contextValue;
-   const [Isclicked, setIsclicked] = useState(false);
-   const dropdownRef = useRef(null); // Ref to track the dropdown element
-   // Function to close dropdown if clicked outside
+    // Execute updates
+    await updatadata();
+    await updateme();
+  };
+
+  const updatadata = async () => {
+    if (!props.Text || props.Text.length === 0) {
+      console.log("No text to update data.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/search_phrases`,
+        {
+          params: {
+            Uid: "-1",
+            phrases: { $regex: `^${props.Text}$`, $options: "i" },
+          },
+        }
+      );
+      console.log("Update data response:", response.data);
+    } catch (error) {
+      try {
+        await axios.put(`${BASE_URL}/api/update`, {
+          collectionName: "search_phrases",
+          searchFields: { Uid: "-1" },
+          updatedValues: {
+            $push: {
+              phrases: {
+                $each: [props.Text],
+                $position: 0,
+                $slice: 5000,
+              },
+            },
+          },
+        });
+        console.log("Data updated successfully.");
+      } catch (error) {
+        console.error("Error updating data:", error);
+      }
+    }
+  };
+
+  const updateme = async () => {
+    if (!Uid || !props.Text || props.Text.length <= 0) {
+      console.log("No Uid or text to update.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/search_phrases`,
+        {
+          params: {
+            Uid,
+            phrases: { $regex: `^${props.Text}$`, $options: "i" },
+          },
+        }
+      );
+      console.log("Update me response:", response.data);
+    } catch (error) {
+      try {
+        await axios.put(`${BASE_URL}/api/update`, {
+          collectionName: "search_phrases",
+          searchFields: { Uid },
+          updatedValues: {
+            $push: {
+              phrases: {
+                $each: [props.Text],
+                $position: 0,
+                $slice: 5,
+              },
+            },
+          },
+        });
+        console.log("Updated me successfully.");
+      } catch (error) {
+        console.error("Error updating me:", error);
+      }
+    }
+  };
+
+  // Forward the `handleClick` function to the parent via ref
+  React.useImperativeHandle(ref, () => ({
+    triggerSearch: handleClick,
+  }));
+
+  return (
+    <button type="button" id="sb1" onClick={handleClick}>
+    </button>
+  );
+});
+
+export function Searchbar() {
+  const [Text, setText] = useState("");
+  const [Txt, setTxt] = useState([]);
+  const contextValue = useContext(Bvalue);
+  const { Catg, Uid } = contextValue;
+  const [Isclicked, setIsclicked] = useState(false);
+  const dropdownRef = useRef(null);
+  const searchButtonRef = useRef(null);
+
   const handleClickOutside = (event) => {
-   if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-     setIsclicked(false); // Close the dropdown
-   }
- };
-   useEffect(() => {
-      if (Isclicked) {
-         document.addEventListener('mousedown', handleClickOutside);
-      }else {
-         document.removeEventListener('mousedown', handleClickOutside);
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsclicked(false);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      console.log("Enter key pressed!");
+      searchButtonRef.current?.triggerSearch(); // Call the forwarded function
+    }
+  };
+
+  useEffect(() => {
+    if (Isclicked) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    const fetchData = async (UId = null) => {
+      try {
+        const regex = `^${G.GenerateSearchRegex(Text)}.*$`;
+        const pipeline = JSON.stringify([
+          {
+            $match: { phrases: { $regex: regex, $options: "i" } },
+          },
+          {
+            $project: {
+              phrases: {
+                $filter: {
+                  input: "$phrases",
+                  as: "phrase",
+                  cond: { $regexMatch: { input: "$$phrase", regex: regex, options: "i" } },
+                },
+              },
+            },
+          },
+        ]);
+        const url = `${BASE_URL}/api/search_phrases?aggregate=true&pipeline=${encodeURIComponent(
+          pipeline
+        )}`;
+        const response = !UId
+          ? await axios.get(url)
+          : await axios.get(`${BASE_URL}/api/search_phrases`, { params: { Uid: UId } });
+        console.log(response.data);
+        const phrases =
+          response.data.length > 0 ? response.data[0].phrases.slice(0, 5) : [];
+        setTxt(
+          phrases
+            .filter((phrase) => phrase !== null)
+            .map((phrase) => ({
+              ph: phrase,
+              path: `/search?query=${phrase.replace(/ /g, "+")}&i=${Catg}`,
+            }))
+        );
+      } catch (error) {
+        setTxt([
+          {
+            ph: Text,
+            path: `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}`,
+          },
+        ]);
       }
-      const fetchData = async (UId=null) =>{
-         try{
-            const regex = `^${G.GenerateSearchRegex(Text)}.*$`;
-            const pipeline = JSON.stringify([
-               {
-                 $match: { phrases : { $regex: regex, $options: "i" } }
-               },
-               {
-                 $project: {
-                   phrases: {
-                     $filter: {
-                       input: "$phrases",
-                       as: "phrase",
-                       cond: { $regexMatch: { input: "$$phrase", regex: regex, options: "i" } }
-                     }
-                   }
-                 }
-               }
-             ]);
-            const url = `${BASE_URL}/api/search_phrases?aggregate=true&pipeline=${encodeURIComponent(pipeline)}`;
-            const response = (!UId)?await axios.get(url):await axios.get(`${BASE_URL}/api/search_phrases`,{params:{Uid:UId}});
-            console.log(response.data);
-            const phrases = response.data.length > 0 ? response.data[0].phrases.slice(0,5) : [];
-            setTxt(
-              phrases.filter((phrase)=>{return phrase!==null}).map((phrase) => ({
-                ph: phrase, // Original phrase (e.g., "premium electronics")
-                path: `/search?query=${phrase.replace(/ /g, "+")}&i=${Catg}`
-              }))
-            );
-         }
-         catch (error){
-            setTxt([
-               {
-               ph: Text, // Original phrase (e.g., "premium electronics")
-               path: `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}`
-               }
-         ])
-         }
-      };
-      if(Text!=='' && Text.length>0){
-         fetchData();
-      }
-      else if(Uid && Isclicked){
-         fetchData(Uid);
-      }
-      else{
-         setTxt([]);
-      }
-      // Cleanup the event listener on component unmount
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
     };
 
-   },[Catg, Text, Uid, Isclicked])
-   return (
-      <div className="se1">
-         <Categories />
-         <div>
-            <input type="text" placeholder="Search" id="s1" value={Text} onChange={(e) => setText(e.target.value)} onClick={() => setIsclicked(!Isclicked)}></input>
-            <G.DropdownSearchMenu Txt={Txt} ref={dropdownRef}/>
-         </div>
-         <Searchbutton path={(Text)?`/search?query=${Text.replace(/ /g, "+")}&i=${Catg}`:`/`} Text={Text} />
+    if (Text !== "" && Text.length > 0) {
+      fetchData();
+    } else if (Uid && Isclicked) {
+      fetchData(Uid);
+    } else {
+      setTxt([]);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [Catg, Text, Uid, Isclicked]);
+
+  return (
+    <div className="se1">
+      <Categories />
+      <div>
+        <input
+          type="text"
+          placeholder="Search"
+          id="s1"
+          value={Text}
+          onChange={(e) => setText(e.target.value)}
+          onClick={() => setIsclicked(!Isclicked)}
+          onKeyDown={handleKeyPress}
+        />
+        <G.DropdownSearchMenu Txt={Txt} ref={dropdownRef} />
       </div>
-   );
+      <Searchbutton
+        ref={searchButtonRef}
+        path={Text ? `/search?query=${Text.replace(/ /g, "+")}&i=${Catg}` : `/`}
+        Text={Text}
+      />
+    </div>
+  );
 }
+
+ 
 
 export function Product3() {
    // State to hold the fetched products

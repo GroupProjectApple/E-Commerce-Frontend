@@ -29,14 +29,17 @@ export default function SignUp() {
                 username,
                 email,
                 password
-                });
-                alert('User created successfully');
-            }
-            catch(error){
-                alert(`Error: ${error.response.data.message}`);
-            }
+            });
+            await axios.post(`${BASE_URL}/api/search_phrases`,{
+                Uid: response.data.data._id,
+                phrases:[username[0]]
+            });
+           }catch (error) {
+              alert(`Error: ${error.response.data.message}`);
+           }
         }
     }
+     window.location.href= '/SignIn';
     };
 
     return (

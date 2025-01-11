@@ -92,7 +92,7 @@ function RouteHandler() {
         <Route path="/YourOrders" element={<YourOrders/>} />
         <Route path="/Account" element={<Account/>} />
         <Route path="/Location" element={<Map/>} />
-        <Route path="/about" element={<AboutUs/>} />
+        <Route path="/About" element={<AboutUs/>} />
       </Routes>
 
       {!hideFooter && <Footer />}
