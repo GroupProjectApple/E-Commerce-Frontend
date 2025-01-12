@@ -319,3 +319,87 @@ export function Recommendations() {
       <G.Product1 product={Recommend} />
    );
  }
+
+ export function SendOtp({ setEmail, setIsOtpSent }) {
+  const [email, setEmailState] = useState(''); // Local state for email input
+  const [message, setMessage] = useState(''); // Local state for messages
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmailState(value); // Update local state
+    setEmail(value);      // Update parent state via prop
+  };
+
+  const handleSendOtp = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/otp/send-otp`, { identifier: email });
+      setMessage(response.data.message);
+      setIsOtpSent(true); // Notify parent component that OTP was sent
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        setMessage(error.response.data.message); // Display the error message from the backend
+      } else {
+        setMessage('An unexpected error occurred. Please try again.'); // Fallback error message
+      }
+    }
+  };
+
+  return (
+    <div className="send-otp-container">
+      <h2 className="send-otp-heading">Enter your email to receive OTP</h2>
+      <input
+        className="send-otp-input"
+        type="email"
+        placeholder="Enter your email"
+        value={email}
+        onChange={handleEmailChange} // Update the local and parent state
+      />
+      <button className="send-otp-button" onClick={handleSendOtp}>Send OTP</button>
+      {message && <p className="send-otp-message">{message}</p>} {/* Display message if available */}
+    </div>
+  );
+}
+
+export function VerifyOtp({ email, onOtpVerified }) {
+  const [otp, setOtp] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleOtpChange = (e) => {
+      setOtp(e.target.value);
+  };
+
+  const handleVerifyOtp = async () => {
+      try {
+          const response = await axios.post(`${BASE_URL}/api/otp/verify-otp`, { identifier: email, otp });
+
+          if (response.data.user) {
+              setMessage('OTP verified successfully');
+              console.log(response.data.user);
+              onOtpVerified(response.data.user); // Pass user details to the parent component
+          } else {
+              setMessage('OTP verification failed');
+          }
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          setMessage(error.response.data.message); // Display the error message from the backend
+        } else {
+          setMessage('An unexpected error occurred. Please try again.'); // Fallback error message
+        }
+      }
+  };
+
+  return (
+      <div className="verify-otp-container">
+          <h2 className="verify-otp-heading">Enter the OTP sent to your email</h2>
+          <input
+              className="verify-otp-input"
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={handleOtpChange}
+          />
+          <button className="verify-otp-button" onClick={handleVerifyOtp}>Verify OTP</button>
+          {message && <p className="verify-otp-message">{message}</p>}
+      </div>
+  );
+}

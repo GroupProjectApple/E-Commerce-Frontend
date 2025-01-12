@@ -15,6 +15,7 @@ import Account from './Account';
 import Map from './location';
 import AboutUs from './AboutUs';
 import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
+import OtpPage from './OTPpage';
 
 export function Mqueue(){
   const {Uid,Recommend, setRecommend, setLat, setLng} = useContext(Bvalue);
@@ -91,6 +92,7 @@ function RouteHandler() {
         <Route path="/search" element={<G.SearchResult/>} />
         <Route path="/YourOrders" element={<YourOrders/>} />
         <Route path="/Account" element={<Account/>} />
+        <Route path="/ForgotPassword" element={<OtpPage/>} />
         <Route path="/Location" element={<Map/>} />
         <Route path="/About" element={<AboutUs/>} />
       </Routes>

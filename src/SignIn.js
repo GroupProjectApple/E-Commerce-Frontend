@@ -113,6 +113,7 @@ export function SignIn() {
                 <button className="phone">Phone</button>
             </div>
             <button className="sign-in-btn" onClick={handleClick}>Sign In</button>
+            <p>Forgot your password?<a href='/ForgotPassword'>Sign in with OTP</a></p>
             <p>Don't have an account? <a href='/SignUp'>Create Account</a></p>
         </div>
     );

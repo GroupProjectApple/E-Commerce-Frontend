@@ -21,3 +21,85 @@
     display:flex;
     flex-direction: row ;
 }
+.send-otp-container {
+    margin-top: 20px;
+  }
+  
+  .send-otp-heading {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .send-otp-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .send-otp-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .send-otp-button:hover {
+    background-color: #45a049;
+  }
+  
+  .send-otp-message {
+    color: #d9534f;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  /* Styling for Verify OTP section */
+  .verify-otp-container {
+    margin-top: 20px;
+  }
+  
+  .verify-otp-heading {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .verify-otp-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .verify-otp-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .verify-otp-button:hover {
+    background-color: #45a049;
+  }
+  
+  .verify-otp-message {
+    color: #d9534f;
+    font-size: 14px;
+    text-align: center;
+  }

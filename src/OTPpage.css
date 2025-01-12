@@ -1,0 +1,92 @@
+/* General layout for OTP page */
+.otp-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligns the container to the top */
+    height: 100vh;
+    background-color: #f4f7fc; /* Lighter background for a cleaner look */
+    font-family: 'Roboto', sans-serif; /* Modern, clean font */
+    padding-top: 50px; /* Adds a little space from the top to make it look better */
+  }
+  
+  .otp-page-section {
+    background-color: #fff;
+    padding: 40px 50px; /* Increased padding for a larger container */
+    border-radius: 12px; /* Rounded corners for a softer look */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Softer shadow for depth */
+    width: 400px; /* Increased width for a bigger form */
+    text-align: center;
+    margin-top: 20px; /* Adds slight space from the top */
+  }
+  
+  /* Heading style */
+  .otp-page-heading {
+    font-size: 28px;
+    color: #333;
+    font-weight: 600; /* Making the heading more prominent */
+    margin-bottom: 20px;
+    letter-spacing: 0.5px; /* Slight spacing for a modern touch */
+  }
+  
+  /* Input fields */
+  .send-otp-input,
+  .verify-otp-input {
+    width: 100%;
+    padding: 14px 18px; /* Increased padding inside input fields */
+    margin: 12px 0; /* Increased margin between inputs */
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    transition: all 0.3s ease;
+  }
+  
+  .send-otp-input:focus,
+  .verify-otp-input:focus {
+    border-color: #4CAF50; /* Highlight the input on focus */
+    outline: none;
+  }
+  
+  /* Button styling */
+  .send-otp-button,
+  .verify-otp-button {
+    width: 100%;
+    padding: 14px 18px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .send-otp-button:hover,
+  .verify-otp-button:hover {
+    background-color: #45a049; /* Slight hover effect */
+  }
+  
+  /* Message styling */
+  .send-otp-message,
+  .verify-otp-message {
+    font-size: 14px;
+    color: #d9534f;
+    margin-top: 10px;
+  }
+  
+  .send-otp-message {
+    margin-bottom: 10px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 480px) {
+    .otp-page-section {
+      width: 90%; /* Make the form take up more space on smaller screens */
+      padding: 20px;
+    }
+  
+    .otp-page-heading {
+      font-size: 24px; /* Reduce heading size on smaller screens */
+    }
+  }
+  
