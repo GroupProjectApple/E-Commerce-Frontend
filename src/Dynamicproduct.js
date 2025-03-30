@@ -146,6 +146,7 @@ const ProductLevel1 = () => {
                                 price: parseInt(props.price),
                                 imageUrl: props.imageUrl, // Add imageUrl here
                                 quantity: 1,
+                                choice: props.Choice,
                             },
                         },
                     },
@@ -164,6 +165,7 @@ const ProductLevel1 = () => {
                                     price: parseInt(props.price),
                                     imageUrl: props.imageUrl, // Add imageUrl here
                                     quantity: 1,
+                                    choice: props.Choice,
                                 },
                             ],
                         })
@@ -228,6 +230,7 @@ const BuyNowButton = (props) => {
                         imageUrl: props.imageUrl, // Add imageUrl
                         quantity: quantity, // Use the selected quantity
                         purchasedAt: new Date().toISOString(),
+                        choice: props.Choice,
                     }],
                     $position:0,
                     $slice:10
@@ -252,6 +255,7 @@ const BuyNowButton = (props) => {
                         imageUrl: props.imageUrl, // Add imageUrl
                         quantity: quantity, // Use the selected quantity
                         purchasedAt: new Date().toISOString(),
+                        choice: props.Choice,
                     },
                 ],
             })
@@ -293,6 +297,7 @@ const ProductLevel0 = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [Choice, setChoice] = useState(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -317,7 +322,7 @@ const ProductLevel0 = () => {
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;
 
-    const { name, brand, price, description, imageUrl, stock, rating, reviews } =
+    const { name, brand, price, description, imageUrl, stock, rating, reviews, choices } =
         product.product_details;
 
     return (
@@ -340,6 +345,16 @@ const ProductLevel0 = () => {
                 <div className="product-rating">
                     Rating: {rating} ⭐
                 </div>
+                {Choice && <h4>Choice: {Choice}</h4>}
+                <div className='choices'>
+                    {choices &&
+                        choices.map((choice, index) => (
+                            <button className='cbtn' onClick={()=>{setChoice(`${choice}`)}} >
+                                {choice}
+                            </button>
+                        ))
+                    }
+                </div>
                 <div className="product-reviews">
                     <h4>Reviews:</h4>
                     {reviews && reviews.length > 0 ? (
@@ -353,8 +368,8 @@ const ProductLevel0 = () => {
                         <p>No reviews available</p>
                     )}
                 </div>
-                <AddToCartButton productId={_id} price={price} imageUrl={imageUrl} />
-                <BuyNowButton productId={_id} price={price} name={name} imageUrl={imageUrl} stock={stock} />
+                <AddToCartButton productId={_id} price={price} imageUrl={imageUrl} Choice={Choice}/>
+                <BuyNowButton productId={_id} price={price} name={name} imageUrl={imageUrl} stock={stock} Choice={Choice} />
             </div>
         </div>
     );

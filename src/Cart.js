@@ -18,6 +18,7 @@ const CartItem = ({ item, updateQuantity, removeItem }) => {
                     />
                     <div>{item.name}</div>
                     <div>Price: ${item.price}</div>
+                    {item.choice && <div>Choice: {item.choice}</div>}
                 </div>
             </Link>
             <input

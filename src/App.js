@@ -10,7 +10,7 @@ import * as D from './Dynamicproduct';
 import * as G from './Generic forms'
 import ECart from './Cart';
 import axios from 'axios';
-import YourOrders from './YourOrders';
+import {YourOrders, RatingAndReview} from './YourOrders';
 import Account from './Account';
 import Map from './location';
 import AboutUs from './AboutUs';
@@ -72,7 +72,7 @@ function RouteHandler() {
 
   // Routes where Navbar and Footer should be hidden
   const hideNavbarRoutes = ['/SignIn', '/SignUp'];
-  const hideFooterRoutes = ['/SignIn', '/SignUp', '/Cart','/Account','/YourOrders','/Location','/about'];
+  const hideFooterRoutes = ['/SignIn', '/SignUp', '/Cart','/Account','/YourOrders','/Location','/About','/Rate'];
 
   const hideNavbar = hideNavbarRoutes.includes(location.pathname);
   const hideFooter = hideFooterRoutes.some((route) => location.pathname.startsWith(route));
@@ -95,6 +95,7 @@ function RouteHandler() {
         <Route path="/ForgotPassword" element={<OtpPage/>} />
         <Route path="/Location" element={<Map/>} />
         <Route path="/About" element={<AboutUs/>} />
+        <Route path="/Rate" element= {<RatingAndReview/>} />
       </Routes>
 
       {!hideFooter && <Footer />}

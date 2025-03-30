@@ -186,3 +186,16 @@
 .product-name {
   font-size: 14px;
 }
+
+.cbtn{
+  margin-left: 8px;
+  margin-right: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cbtn:hover{
+  transform: scale(1.10);
+}
+.cbtn:active{
+  background-color: #004085;
+}

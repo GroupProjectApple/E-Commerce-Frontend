@@ -5,6 +5,57 @@ import { format } from 'date-fns';
 import './YourOrders.css'; // Import the CSS file
 import { SignInSignUp } from './Generic forms';
 import {BASE_URL,MESSAGE_QUEUE_URL} from './config';
+import { Star } from "lucide-react";
+
+const RatingAndReview = ({ totalStars = 5 }) => {
+  const [rating, setRating] = useState(0);
+  const [hovered, setHovered] = useState(0);
+  const [review, setReview] = useState("");
+
+  const handleSubmit = async () => {
+    if (!rating || !review) {
+      alert("Please provide both a rating and a review!");
+      return;
+    }
+
+    const data = { rating, review };
+    try {
+      const response = await axios.put("", data);
+      alert(response.data.message || "Review submitted successfully!");
+      setRating(0);
+      setReview("");
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+      alert("Failed to submit review. Please try again.");
+    }
+  };
+
+  return (
+    <div className="rating-review-container">
+      <div className="stars-container">
+        {Array.from({ length: totalStars }, (_, index) => index + 1).map((value) => (
+          <Star
+            key={value}
+            size={32}
+            className={`star-icon ${value <= (hovered || rating) ? "active" : ""}`}
+            onClick={() => setRating(value)}
+            onMouseEnter={() => setHovered(value)}
+            onMouseLeave={() => setHovered(0)}
+          />
+        ))}
+      </div>
+      <textarea
+        className="review-textarea"
+        placeholder="Write your review here..."
+        value={review}
+        onChange={(e) => setReview(e.target.value)}
+      />
+      <button className="submit-button" onClick={handleSubmit}>
+        Submit Review
+      </button>
+    </div>
+  );
+};
 
 const YourOrders = () => {
     const { Uid } = useContext(Bvalue); // UserId from context
@@ -64,8 +115,10 @@ const YourOrders = () => {
                         <p>{order.name}</p>
                         <p>Quantity: {order.quantity}</p>
                         <p>Price(Per Item): ${order.price}</p>
+                        {order.choice && <p>Choice: {order.choice}</p>}
                         <p className="date">Date: {format(new Date(order.purchasedAt), 'yyyy-MM-dd')}</p>
                         <p className="time">Time: {format(new Date(order.purchasedAt), 'HH:mm:ss')}</p>
+                        {order.rating == "N/A" ?(<a href='/Rate'>Rate</a>):(<p>You Rated: {order.rating}</p>)}
                     </div>
                 ))
             )}
@@ -73,4 +126,4 @@ const YourOrders = () => {
     );
 };
 
-export default YourOrders;
+export {YourOrders, RatingAndReview};

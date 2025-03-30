@@ -200,6 +200,12 @@ export function SearchResult() {
                       }
                     },
                     {
+                      'product_details.price': {
+                        '$regex': query,
+                        '$options': 'i'
+                      }
+                    },
+                    {
                       'product_details.tags': {
                         '$regex': query,
                         '$options': 'i'
